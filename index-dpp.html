@@ -4,120 +4,120 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Digital Product Passport</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.js"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <style>
-        .secondary-info {
-            display: none;
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0ea5e9',
+                        secondary: '#64748b',
+                    }
+                }
+            }
         }
-        .secondary-info.show {
-            display: block;
-        }
-    </style>
+    </script>
 </head>
-<body class="bg-gray-50">
-    <div class="max-w-4xl mx-auto p-6 space-y-6">
-        <h1 class="text-3xl font-bold text-gray-900 mb-8">Digital Product Passport</h1>
+<body class="bg-gray-50 font-sans">
+    <div class="max-w-6xl mx-auto p-6">
+        <!-- Header -->
+        <div class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-primary mb-2">Digital Product Passport</h1>
+            <p class="text-secondary text-lg">Product ID: #123456</p>
+        </div>
         
-        <!-- Sustainability Section -->
-        <div class="bg-white rounded-lg shadow-md p-6">
-            <div class="flex items-center gap-2 mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-                </svg>
-                <h2 class="text-xl font-semibold">Sustainability Metrics</h2>
+        <!-- Primary Metrics Grid -->
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-12">
+            <!-- Environmental Rating -->
+            <div class="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow duration-300">
+                <div class="text-sm text-secondary mb-2">Environmental Rating</div>
+                <div class="flex gap-1">
+                    <div class="w-4 h-4 rounded-full bg-green-500"></div>
+                    <div class="w-4 h-4 rounded-full bg-green-500"></div>
+                    <div class="w-4 h-4 rounded-full bg-green-500"></div>
+                    <div class="w-4 h-4 rounded-full bg-green-500"></div>
+                    <div class="w-4 h-4 rounded-full bg-gray-200"></div>
+                </div>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <p class="text-sm text-gray-500">Environmental Rating</p>
-                    <div class="flex gap-1 mt-1">
-                        <div class="w-4 h-4 rounded-full bg-green-500"></div>
-                        <div class="w-4 h-4 rounded-full bg-green-500"></div>
-                        <div class="w-4 h-4 rounded-full bg-green-500"></div>
-                        <div class="w-4 h-4 rounded-full bg-green-500"></div>
-                        <div class="w-4 h-4 rounded-full bg-gray-200"></div>
-                    </div>
-                </div>
-                <div>
-                    <p class="text-sm text-gray-500">Recycled Content</p>
-                    <p class="text-lg font-semibold">75%</p>
-                </div>
-                <div>
-                    <p class="text-sm text-gray-500">Forest Certification</p>
-                    <p class="text-lg font-semibold">FSC Certified</p>
-                </div>
-                <div>
-                    <p class="text-sm text-gray-500">Product Origin</p>
-                    <p class="text-lg font-semibold">Sweden</p>
-                </div>
+
+            <!-- Recycled Content -->
+            <div class="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow duration-300">
+                <div class="text-sm text-secondary mb-2">Recycled Content</div>
+                <div class="text-3xl font-bold text-primary">75%</div>
+            </div>
+
+            <!-- Forest Certification -->
+            <div class="bg-green-50 rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow duration-300">
+                <div class="text-sm text-secondary mb-2">Certification</div>
+                <div class="text-green-700 font-semibold">FSC Certified</div>
+            </div>
+
+            <!-- Product Origin -->
+            <div class="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow duration-300">
+                <div class="text-sm text-secondary mb-2">Origin</div>
+                <div class="font-semibold text-primary">Sweden</div>
+            </div>
+
+            <!-- Carbon Footprint -->
+            <div class="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow duration-300">
+                <div class="text-sm text-secondary mb-2">Carbon Footprint</div>
+                <div class="text-3xl font-bold text-primary">2.5</div>
+                <div class="text-xs text-secondary">kgCO2e</div>
+            </div>
+
+            <!-- Recyclability -->
+            <div class="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow duration-300">
+                <div class="text-sm text-secondary mb-2">Recyclability</div>
+                <div class="text-3xl font-bold text-primary">95%</div>
+            </div>
+
+            <!-- Water Usage -->
+            <div class="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow duration-300">
+                <div class="text-sm text-secondary mb-2">Water Usage</div>
+                <div class="text-3xl font-bold text-primary">150</div>
+                <div class="text-xs text-secondary">Litres</div>
+            </div>
+
+            <!-- Chemical Safety -->
+            <div class="bg-green-50 rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow duration-300">
+                <div class="text-sm text-secondary mb-2">Chemical Safety</div>
+                <div class="text-green-700 font-semibold">Safe</div>
             </div>
         </div>
 
-        <!-- Environmental Impact Section -->
-        <div class="bg-white rounded-lg shadow-md p-6">
-            <div class="flex items-center gap-2 mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-blue-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                </svg>
-                <h2 class="text-xl font-semibold">Environmental Impact</h2>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <p class="text-sm text-gray-500">Carbon Footprint</p>
-                    <p class="text-lg font-semibold">2.5 kgCO2e</p>
-                </div>
-                <div>
-                    <p class="text-sm text-gray-500">Recyclability</p>
-                    <p class="text-lg font-semibold">95%</p>
-                </div>
-                <div>
-                    <p class="text-sm text-gray-500">Water Usage</p>
-                    <p class="text-lg font-semibold">150 Litres</p>
-                </div>
-                <div>
-                    <p class="text-sm text-gray-500">Chemical Safety</p>
-                    <p class="text-lg font-semibold text-green-500">Safe</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Secondary Information Toggle -->
+        <!-- Secondary Info Toggle -->
         <button 
             onclick="toggleSecondary()"
-            class="w-full flex items-center justify-center gap-2 py-4 text-gray-600 hover:text-gray-900 transition-colors"
+            class="w-full bg-white rounded-xl p-4 shadow-md hover:shadow-lg transition-all duration-300 text-secondary hover:text-primary mb-6 focus:outline-none focus:ring-2 focus:ring-primary"
         >
-            <span id="toggle-text">Show Additional Information</span>
-            <svg xmlns="http://www.w3.org/2000/svg" id="toggle-icon" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="6 9 12 15 18 9"/>
-            </svg>
+            <span id="toggle-text" class="font-medium text-lg">Show Additional Information</span>
         </button>
 
         <!-- Secondary Information -->
-        <div id="secondary-info" class="secondary-info bg-white rounded-lg shadow-md p-6">
-            <div class="flex items-center gap-2 mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-purple-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10"/>
-                    <line x1="12" y1="16" x2="12" y2="12"/>
-                    <line x1="12" y1="8" x2="12" y2="8"/>
-                </svg>
-                <h2 class="text-xl font-semibold">Usage Information</h2>
-            </div>
-            <div class="space-y-4">
-                <div>
-                    <p class="text-sm text-gray-500">Storage Guidelines</p>
-                    <p class="text-lg">Store in a cool, dry place</p>
+        <div id="secondary-info" class="hidden space-y-6 transition-all duration-300">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Storage Guidelines -->
+                <div class="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <div class="text-sm text-secondary mb-2">Storage Guidelines</div>
+                    <div class="text-primary">Store in a cool, dry place</div>
                 </div>
-                <div>
-                    <p class="text-sm text-gray-500">Disposal Instructions</p>
-                    <p class="text-lg">Separate parts before recycling</p>
+
+                <!-- Disposal Instructions -->
+                <div class="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <div class="text-sm text-secondary mb-2">Disposal Instructions</div>
+                    <div class="text-primary">Separate parts before recycling</div>
                 </div>
-                <div>
-                    <p class="text-sm text-gray-500">Handling Guidelines</p>
-                    <p class="text-lg">Handle with care when wet</p>
+
+                <!-- Handling Guidelines -->
+                <div class="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <div class="text-sm text-secondary mb-2">Handling Guidelines</div>
+                    <div class="text-primary">Handle with care when wet</div>
                 </div>
-                <div>
-                    <p class="text-sm text-gray-500">Recycling Guide</p>
-                    <p class="text-lg">Fully recyclable in paper stream</p>
+
+                <!-- Recycling Guide -->
+                <div class="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <div class="text-sm text-secondary mb-2">Recycling Guide</div>
+                    <div class="text-primary">Fully recyclable in paper stream</div>
                 </div>
             </div>
         </div>
@@ -127,16 +127,15 @@
         function toggleSecondary() {
             const secondaryInfo = document.getElementById('secondary-info');
             const toggleText = document.getElementById('toggle-text');
-            const toggleIcon = document.getElementById('toggle-icon');
             
-            secondaryInfo.classList.toggle('show');
+            secondaryInfo.classList.toggle('hidden');
             
-            if (secondaryInfo.classList.contains('show')) {
+            if (!secondaryInfo.classList.contains('hidden')) {
                 toggleText.textContent = 'Hide Additional Information';
-                toggleIcon.style.transform = 'rotate(180deg)';
+                secondaryInfo.classList.add('animate-fade-in');
             } else {
                 toggleText.textContent = 'Show Additional Information';
-                toggleIcon.style.transform = 'rotate(0deg)';
+                secondaryInfo.classList.remove('animate-fade-in');
             }
         }
     </script>
