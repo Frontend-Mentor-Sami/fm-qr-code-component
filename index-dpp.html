@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Digital Product Passport</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -74,7 +76,7 @@
             <!-- Water Usage -->
             <div class="bg-white rounded-xl p-4 sm:p-6 shadow-md hover:shadow-lg transition-shadow duration-300">
                 <div class="text-sm text-secondary mb-2">Water Usage</div>
-                <div class="text-2xl sm:text-3xl font-bold text-primary">150</div>
+                <div class="text-2xl sm:text-3xl font-bold text-primary">15</div>
                 <div class="text-xs text-secondary">Litres</div>
             </div>
 
@@ -82,6 +84,24 @@
             <div class="bg-green-50 rounded-xl p-4 sm:p-6 shadow-md hover:shadow-lg transition-shadow duration-300">
                 <div class="text-sm text-secondary mb-2">Chemical Safety</div>
                 <div class="text-green-700 font-semibold">Safe</div>
+            </div>
+        </div>
+
+        <!-- Graphs -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <!-- Sustainability Overview -->
+            <div class="bg-white rounded-xl p-4 sm:p-6 shadow-md">
+                <h2 class="text-lg font-semibold mb-4">Sustainability Overview</h2>
+                <div class="h-64">
+                    <canvas id="sustainabilityChart"></canvas>
+                </div>
+            </div>
+            <!-- Recycled vs Non-recycled Content -->
+            <div class="bg-white rounded-xl p-4 sm:p-6 shadow-md">
+                <h2 class="text-lg font-semibold mb-4">Recycled vs Non-recycled Content</h2>
+                <div class="h-64">
+                    <canvas id="recycledContentChart"></canvas>
+                </div>
             </div>
         </div>
 
@@ -138,7 +158,111 @@
                 secondaryInfo.classList.remove('animate-fade-in');
             }
         }
+
+        // Function to create charts
+        function createCharts() {
+            Chart.register(ChartDataLabels);
+
+            // Sustainability Overview Chart
+            const sustainabilityCtx = document.getElementById('sustainabilityChart').getContext('2d');
+            const sustainabilityChart = new Chart(sustainabilityCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Environmental Rating', 'Recycled Content (%)', 'Carbon Footprint (kgCO2e)', 'Recyclability (%)', 'Water Usage (L)'],
+                    datasets: [{
+                        label: 'Sustainability Metrics',
+                        data: [4, 75, 2.5, 95, 15],
+                        backgroundColor: [
+                            'rgba(75, 192, 192, 0.6)',
+                            'rgba(54, 162, 235, 0.6)',
+                            'rgba(255, 206, 86, 0.6)',
+                            'rgba(153, 102, 255, 0.6)',
+                            'rgba(255, 99, 132, 0.6)'
+                        ],
+                        borderColor: [
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 99, 132, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            title: {
+                                display: true,
+                                text: 'Value'
+                            }
+                        }
+                    },
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        datalabels: {
+                            anchor: 'end',
+                            align: 'top',
+                            formatter: (value, context) => {
+                                return value;
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Recycled Content Chart
+            const recycledContentCtx = document.getElementById('recycledContentChart').getContext('2d');
+            const recycledContentChart = new Chart(recycledContentCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Recycled', 'Non-recycled'],
+                    datasets: [{
+                        data: [75, 25],
+                        backgroundColor: [
+                            'rgba(75, 192, 192, 0.6)',
+                            'rgba(255, 99, 132, 0.6)'
+                        ],
+                        borderColor: [
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(255, 99, 132, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        datalabels: {
+                            color: '#fff',
+                            formatter: (value, context) => {
+                                return value + '%';
+                            }
+                        }
+                    }
+                }
+            });
+
+            return { sustainabilityChart, recycledContentChart };
+        }
+
+        // Create charts when the page loads
+        let charts;
+        document.addEventListener('DOMContentLoaded', () => {
+            charts = createCharts();
+        });
+
+        // Resize charts when window is resized
+        window.addEventListener('resize', () => {
+            if (charts) {
+                charts.sustainabilityChart.resize();
+                charts.recycledContentChart.resize();
+            }
+        });
     </script>
 </body>
 </html>
-
