@@ -498,27 +498,29 @@
                     labels: ['Carbon Footprint', 'Water Usage', 'Energy Usage', 'Waste Reduction'],
                     datasets: [{
                         label: 'This Product',
-                        data: [2.5, 15, 42, 95],
+                        data: [65, 65, 72, 119],
                         backgroundColor: 'rgba(91, 130, 91, 0.7)',
                         borderColor: 'rgba(91, 130, 91, 1)',
                         borderWidth: 1
                     }, {
                         label: 'Industry Average',
-                        data: [3.8, 23, 58, 80],
+                        data: [100, 100, 100, 100],
                         backgroundColor: 'rgba(209, 213, 219, 0.5)',
                         borderColor: 'rgba(209, 213, 219, 1)',
                         borderWidth: 1
                     }]
                 },
                 options: {
+                    indexAxis: 'y',
                     responsive: true,
                     maintainAspectRatio: false,
                     scales: {
-                        y: {
+                        x: {
                             beginAtZero: true,
+                            max: 120,
                             title: {
                                 display: true,
-                                text: 'Environmental Impact'
+                                text: 'Percentage of Industry Average'
                             }
                         }
                     },
@@ -527,17 +529,20 @@
                             callbacks: {
                                 label: function(context) {
                                     const label = context.dataset.label || '';
-                                    const value = context.parsed.y;
-                                    let unit = '';
+                                    const value = context.parsed.x;
                                     
-                                    switch(context.dataIndex) {
-                                        case 0: unit = 'kg CO₂e'; break;
-                                        case 1: unit = 'liters'; break;
-                                        case 2: unit = 'kWh'; break;
-                                        case 3: unit = '%'; break;
+                                    if (context.datasetIndex === 0) {
+                                        const actualValues = [2.5, 15, 42, 95];
+                                        const units = ['kg CO₂e', 'liters', 'kWh', '%'];
+                                        const industryValues = [3.8, 23, 58, 80];
+                                        
+                                        return `${label}: ${actualValues[context.dataIndex]} ${units[context.dataIndex]} (${value}% of average)`;
+                                    } else {
+                                        const industryValues = [3.8, 23, 58, 80];
+                                        const units = ['kg CO₂e', 'liters', 'kWh', '%'];
+                                        
+                                        return `${label}: ${industryValues[context.dataIndex]} ${units[context.dataIndex]}`;
                                     }
-                                    
-                                    return `${label}: ${value} ${unit}`;
                                 }
                             }
                         },
@@ -553,14 +558,13 @@
                                 weight: 'bold'
                             },
                             formatter: (value, context) => {
-                                let unit = '';
-                                switch(context.dataIndex) {
-                                    case 0: unit = 'kg'; break;
-                                    case 1: unit = 'L'; break;
-                                    case 2: unit = 'kWh'; break;
-                                    case 3: unit = '%'; break;
+                                if (context.datasetIndex === 0) {
+                                    const actualValues = [2.5, 15, 42, 95];
+                                    const units = ['kg', 'L', 'kWh', '%'];
+                                    return actualValues[context.dataIndex] + units[context.dataIndex];
+                                } else {
+                                    return value + '%';
                                 }
-                                return value + unit;
                             }
                         }
                     }
