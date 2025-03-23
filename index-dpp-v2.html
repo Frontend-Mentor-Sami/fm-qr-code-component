@@ -495,32 +495,35 @@
             const environmentalChart = new Chart(environmentalCtx, {
                 type: 'bar',
                 data: {
-                    labels: ['Carbon Footprint', 'Water Usage', 'Energy Usage', 'Waste Reduction'],
+                    labels: ['Carbon Reduction', 'Water Saving', 'Energy Saving', 'Recycled Content'],
                     datasets: [{
-                        label: 'This Product',
-                        data: [65, 65, 72, 119],
-                        backgroundColor: 'rgba(91, 130, 91, 0.7)',
-                        borderColor: 'rgba(91, 130, 91, 1)',
-                        borderWidth: 1
-                    }, {
-                        label: 'Industry Average',
-                        data: [100, 100, 100, 100],
-                        backgroundColor: 'rgba(209, 213, 219, 0.5)',
-                        borderColor: 'rgba(209, 213, 219, 1)',
+                        label: 'Environmental Performance',
+                        data: [34, 35, 28, 75],
+                        backgroundColor: [
+                            'rgba(16, 185, 129, 0.7)',
+                            'rgba(59, 130, 246, 0.7)',
+                            'rgba(139, 92, 246, 0.7)',
+                            'rgba(91, 130, 91, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(16, 185, 129, 1)',
+                            'rgba(59, 130, 246, 1)',
+                            'rgba(139, 92, 246, 1)',
+                            'rgba(91, 130, 91, 1)'
+                        ],
                         borderWidth: 1
                     }]
                 },
                 options: {
-                    indexAxis: 'y',
                     responsive: true,
                     maintainAspectRatio: false,
                     scales: {
-                        x: {
+                        y: {
                             beginAtZero: true,
-                            max: 120,
+                            max: 100,
                             title: {
                                 display: true,
-                                text: 'Percentage of Industry Average'
+                                text: 'Performance (%)'
                             }
                         }
                     },
@@ -528,43 +531,43 @@
                         tooltip: {
                             callbacks: {
                                 label: function(context) {
-                                    const label = context.dataset.label || '';
-                                    const value = context.parsed.x;
+                                    const metrics = [
+                                        { product: 2.5, industry: 3.8, unit: 'kg CO₂e', label: 'Carbon Footprint' },
+                                        { product: 15, industry: 23, unit: 'liters', label: 'Water Usage' },
+                                        { product: 42, industry: 58, unit: 'kWh', label: 'Energy Usage' },
+                                        { product: 75, industry: 40, unit: '%', label: 'Recycled Content' }
+                                    ];
                                     
-                                    if (context.datasetIndex === 0) {
-                                        const actualValues = [2.5, 15, 42, 95];
-                                        const units = ['kg CO₂e', 'liters', 'kWh', '%'];
-                                        const industryValues = [3.8, 23, 58, 80];
-                                        
-                                        return `${label}: ${actualValues[context.dataIndex]} ${units[context.dataIndex]} (${value}% of average)`;
-                                    } else {
-                                        const industryValues = [3.8, 23, 58, 80];
-                                        const units = ['kg CO₂e', 'liters', 'kWh', '%'];
-                                        
-                                        return `${label}: ${industryValues[context.dataIndex]} ${units[context.dataIndex]}`;
+                                    const metric = metrics[context.dataIndex];
+                                    const performance = context.parsed.y;
+                                    
+                                    if (context.dataIndex <= 2) { // For reduction metrics
+                                        return [
+                                            `${metric.label}: ${metric.product} ${metric.unit}`,
+                                            `Industry Avg: ${metric.industry} ${metric.unit}`,
+                                            `Reduction: ${performance}%`
+                                        ];
+                                    } else { // For recycled content
+                                        return [
+                                            `${metric.label}: ${performance}%`,
+                                            `Industry Avg: ${metric.industry}%`,
+                                            `Improvement: ${performance - metric.industry}%`
+                                        ];
                                     }
                                 }
                             }
                         },
                         legend: {
-                            position: 'bottom'
+                            display: false
                         },
                         datalabels: {
                             display: true,
-                            color: function(context) {
-                                return context.datasetIndex === 0 ? '#fff' : '#555';
-                            },
+                            color: '#fff',
                             font: {
                                 weight: 'bold'
                             },
-                            formatter: (value, context) => {
-                                if (context.datasetIndex === 0) {
-                                    const actualValues = [2.5, 15, 42, 95];
-                                    const units = ['kg', 'L', 'kWh', '%'];
-                                    return actualValues[context.dataIndex] + units[context.dataIndex];
-                                } else {
-                                    return value + '%';
-                                }
+                            formatter: (value) => {
+                                return value + '%';
                             }
                         }
                     }
