@@ -498,13 +498,13 @@
                     labels: ['Carbon Footprint', 'Water Usage', 'Energy Usage', 'Waste Reduction'],
                     datasets: [{
                         label: 'This Product',
-                        data: [25, 30, 40, 75],
+                        data: [2.5, 15, 42, 95],
                         backgroundColor: 'rgba(91, 130, 91, 0.7)',
                         borderColor: 'rgba(91, 130, 91, 1)',
                         borderWidth: 1
                     }, {
                         label: 'Industry Average',
-                        data: [100, 100, 100, 100],
+                        data: [3.8, 23, 58, 80],
                         backgroundColor: 'rgba(209, 213, 219, 0.5)',
                         borderColor: 'rgba(209, 213, 219, 1)',
                         borderWidth: 1
@@ -518,24 +518,49 @@
                             beginAtZero: true,
                             title: {
                                 display: true,
-                                text: 'Percentage of Industry Average'
+                                text: 'Environmental Impact'
                             }
                         }
                     },
                     plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.dataset.label || '';
+                                    const value = context.parsed.y;
+                                    let unit = '';
+                                    
+                                    switch(context.dataIndex) {
+                                        case 0: unit = 'kg CO₂e'; break;
+                                        case 1: unit = 'liters'; break;
+                                        case 2: unit = 'kWh'; break;
+                                        case 3: unit = '%'; break;
+                                    }
+                                    
+                                    return `${label}: ${value} ${unit}`;
+                                }
+                            }
+                        },
                         legend: {
                             position: 'bottom'
                         },
                         datalabels: {
-                            display: function(context) {
-                                return context.datasetIndex === 0; // only show for "This Product"
+                            display: true,
+                            color: function(context) {
+                                return context.datasetIndex === 0 ? '#fff' : '#555';
                             },
-                            color: '#fff',
                             font: {
                                 weight: 'bold'
                             },
-                            formatter: (value) => {
-                                return value + '%';
+                            formatter: (value, context) => {
+                                let unit = '';
+                                switch(context.dataIndex) {
+                                    case 0: unit = 'kg'; break;
+                                    case 1: unit = 'L'; break;
+                                    case 2: unit = 'kWh'; break;
+                                    case 3: unit = '%'; break;
+                                }
+                                return value + unit;
                             }
                         }
                     }
