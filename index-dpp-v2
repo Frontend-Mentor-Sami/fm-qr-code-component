@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paper Product Passport</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        forest: {
+                            50: '#f2f7f4',
+                            100: '#dfeae3',
+                            200: '#c1d6ca',
+                            300: '#9aba9a',
+                            400: '#759d75',
+                            500: '#5b825b',
+                            600: '#46684a',
+                            700: '#39533d',
+                            800: '#314435',
+                            900: '#2a392e',
+                            950: '#141f18',
+                        },
+                        paper: {
+                            50: '#f7f7f2',
+                            100: '#efeee5',
+                            200: '#dbd8c8',
+                            300: '#c6c1a6',
+                            400: '#ada483',
+                            500: '#9c9171',
+                            600: '#867a5e',
+                            700: '#6c634e',
+                            800: '#5a5342',
+                            900: '#4b4639',
+                            950: '#292620',
+                        },
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f7f7f2;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23dbd8c8' fill-opacity='0.3' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+        
+        .eco-badge {
+            position: relative;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 18px;
+            color: white;
+        }
+        
+        .eco-badge::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            background: conic-gradient(from 0deg, #34d399, #10b981, #059669, #047857, #065f46, #064e3b, #022c22, #34d399);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            animation: rotate 3s linear infinite;
+        }
+        
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in forwards;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <div class="max-w-6xl mx-auto p-4 sm:p-6">
+        <!-- Header with Paper Product Branding -->
+        <div class="flex flex-col sm:flex-row items-center justify-between mb-8 sm:mb-10 bg-white rounded-xl shadow-lg p-4 sm:p-6 border-l-4 border-forest-500">
+            <div class="flex items-center mb-4 sm:mb-0">
+                <div class="mr-4 bg-forest-100 p-2 rounded-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-forest-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17 11l-5-5-5 5"/>
+                        <path d="M17 18l-5-5-5 5"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-2xl sm:text-3xl font-bold text-forest-800">Paper Product Passport</h1>
+                    <p class="text-paper-500 text-sm sm:text-base">Premium Copy Paper - 80gsm A4</p>
+                </div>
+            </div>
+            <div class="flex flex-col items-end">
+                <div class="flex items-center">
+                    <div class="text-xs font-medium uppercase tracking-wider text-forest-600 mr-2">Verified</div>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <p class="text-paper-400 text-xs sm:text-sm mt-1">Product ID: ECO-123456</p>
+            </div>
+        </div>
+        
+        <!-- Environmental Score Hero Section -->
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden mb-8">
+            <div class="bg-gradient-to-r from-forest-500 to-forest-700 px-4 py-3 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white mr-2" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
+                </svg>
+                <h2 class="text-white font-medium">Environmental Performance</h2>
+            </div>
+            <div class="p-6 flex flex-col md:flex-row items-center justify-between">
+                <div class="mb-6 md:mb-0 flex flex-col items-center">
+                    <div class="eco-badge bg-forest-600 mb-2">A</div>
+                    <div class="text-sm text-center text-forest-800 font-medium">Eco-Grade</div>
+                </div>
+                
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 flex-grow ml-0 md:ml-10">
+                    <!-- Recycled Content -->
+                    <div class="bg-white rounded-xl p-4 shadow-md hover:shadow-lg transition-shadow duration-300 text-center">
+                        <div class="text-sm text-secondary mb-1">Recycled Content</div>
+                        <div class="text-2xl font-bold text-forest-600">75%</div>
+                    </div>
+
+                    <!-- Forest Certification -->
+                    <div class="bg-green-50 rounded-xl p-4 shadow-md hover:shadow-lg transition-shadow duration-300 text-center">
+                        <div class="text-sm text-secondary mb-1">Certification</div>
+                        <div class="text-green-700 font-semibold">FSC Certified</div>
+                    </div>
+
+                    <!-- Carbon Footprint -->
+                    <div class="bg-white rounded-xl p-4 shadow-md hover:shadow-lg transition-shadow duration-300 text-center">
+                        <div class="text-sm text-secondary mb-1">Carbon Footprint</div>
+                        <div class="text-2xl font-bold text-forest-600">2.5</div>
+                        <div class="text-xs text-secondary">kgCO₂e</div>
+                    </div>
+
+                    <!-- Recyclability -->
+                    <div class="bg-white rounded-xl p-4 shadow-md hover:shadow-lg transition-shadow duration-300 text-center">
+                        <div class="text-sm text-secondary mb-1">Recyclability</div>
+                        <div class="text-2xl font-bold text-forest-600">95%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Primary Metrics Grid - Paper Specifics -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 sm:gap-6 mb-8">
+            <!-- Fiber Source -->
+            <div class="bg-white rounded-xl p-5 shadow-md hover:shadow-lg transition-shadow duration-300 border-t-4 border-forest-500 flex items-start">
+                <div class="bg-forest-100 p-2 rounded-full mr-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-forest-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" />
+                    </svg>
+                </div>
+                <div>
+                    <div class="text-sm text-gray-600 mb-1">Fiber Source</div>
+                    <div class="font-semibold text-forest-700">75% Recycled</div>
+                    <div class="text-xs text-forest-500 mt-1">30% Post-Consumer</div>
+                </div>
+            </div>
+
+            <!-- Chemical Safety -->
+            <div class="bg-white rounded-xl p-5 shadow-md hover:shadow-lg transition-shadow duration-300 border-t-4 border-blue-500 flex items-start">
+                <div class="bg-blue-100 p-2 rounded-full mr-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                    </svg>
+                </div>
+                <div>
+                    <div class="text-sm text-gray-600 mb-1">Chemical Safety</div>
+                    <div class="font-semibold text-blue-700">Chlorine-Free</div>
+                    <div class="text-xs text-blue-500 mt-1">ECF Process</div>
+                </div>
+            </div>
+
+            <!-- Origin -->
+            <div class="bg-white rounded-xl p-5 shadow-md hover:shadow-lg transition-shadow duration-300 border-t-4 border-paper-500 flex items-start">
+                <div class="bg-paper-100 p-2 rounded-full mr-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-paper-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" />
+                    </svg>
+                </div>
+                <div>
+                    <div class="text-sm text-gray-600 mb-1">Origin</div>
+                    <div class="font-semibold text-paper-700">Sweden</div>
+                    <div class="text-xs text-paper-500 mt-1">Sustainable Mill</div>
+                </div>
+            </div>
+
+            <!-- Water Usage -->
+            <div class="bg-white rounded-xl p-5 shadow-md hover:shadow-lg transition-shadow duration-300 border-t-4 border-blue-400 flex items-start">
+                <div class="bg-blue-50 p-2 rounded-full mr-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                    </svg>
+                </div>
+                <div>
+                    <div class="text-sm text-gray-600 mb-1">Water Usage</div>
+                    <div class="font-semibold text-blue-700">15 Liters</div>
+                    <div class="text-xs text-blue-500 mt-1">30% below avg</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Charts Section -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <!-- Fiber Composition Chart -->
+            <div class="bg-white rounded-xl p-4 sm:p-6 shadow-md">
+                <h2 class="text-lg font-semibold mb-4 text-forest-800">Fiber Composition</h2>
+                <div class="h-64">
+                    <canvas id="fiberCompositionChart"></canvas>
+                </div>
+            </div>
+            
+            <!-- Environmental Impact Chart -->
+            <div class="bg-white rounded-xl p-4 sm:p-6 shadow-md">
+                <h2 class="text-lg font-semibold mb-4 text-forest-800">Environmental Impact</h2>
+                <div class="h-64">
+                    <canvas id="environmentalImpactChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Secondary Info Toggle -->
+        <button 
+            onclick="toggleSecondary()"
+            class="w-full bg-white rounded-xl p-4 shadow-md hover:shadow-lg transition-all duration-300 text-secondary hover:text-forest-600 mb-6 focus:outline-none focus:ring-2 focus:ring-forest-500"
+        >
+            <span id="toggle-text" class="font-medium text-base sm:text-lg flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                </svg>
+                Show Additional Information
+            </span>
+        </button>
+
+        <!-- Secondary Information (Hidden by Default) -->
+        <div id="secondary-info" class="hidden space-y-6 transition-all duration-300">
+            <!-- Recycling Instructions -->
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                <div class="bg-gradient-to-r from-green-500 to-green-700 px-4 py-3 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white mr-2" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd" />
+                    </svg>
+                    <h2 class="text-white font-medium">Recycling Instructions</h2>
+                </div>
+                <div class="p-6">
+                    <div class="flex flex-col md:flex-row items-start gap-6">
+                        <div class="bg-green-50 p-4 rounded-lg flex-grow">
+                            <h3 class="text-lg font-medium text-green-800 mb-2">How to Recycle This Product</h3>
+                            <ul class="space-y-2">
+                                <li class="flex items-start">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-600 mr-2 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                    </svg>
+                                    <span>Place in your <strong>paper recycling bin</strong> without plastic wrapping</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-600 mr-2 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                    </svg>
+                                    <span>Keep dry to maintain recyclability</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-600 mr-2 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                    </svg>
+                                    <span>No special treatment needed - can go in standard paper recycling stream</span>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div class="bg-red-50 p-4 rounded-lg flex-grow">
+                            <h3 class="text-lg font-medium text-red-800 mb-2">What to Avoid</h3>
+                            <ul class="space-y-2">
+                                <li class="flex items-start">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-600 mr-2 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                                    </svg>
+                                    <span>Do not mix with food-contaminated paper</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-600 mr-2 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                                    </svg>
+                                    <span>Avoid recycling if heavily soiled with ink, oil or chemicals</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-600 mr-2 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                                    </svg>
+                                    <span>Do not place in plastic bags when recycling</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Paper Specifications -->
+            <div class="bg-white rounded-xl shadow-lg p-5">
+                <h2 class="text-lg font-semibold text-forest-800 mb-4 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-forest-600" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+                        <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3z" clip-rule="evenodd" />
+                    </svg>
+                    Paper Specifications
+                </h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                    <div class="bg-gray-50 p-3 rounded-lg">
+                        <div class="text-sm text-gray-500">Brightness</div>
+                        <div class="font-medium">92 ISO</div>
+                    </div>
+                    <div class="bg-gray-50 p-3 rounded-lg">
+                        <div class="text-sm text-gray-500">Weight</div>
+                        <div class="font-medium">80 gsm</div>
+                    </div>
+                    <div class="bg-gray-50 p-3 rounded-lg">
+                        <div class="text-sm text-gray-500">Size</div>
+                        <div class="font-medium">A4 (210 × 297 mm)</div>
+                    </div>
+                    <div class="bg-gray-50 p-3 rounded-lg">
+                        <div class="text-sm text-gray-500">Opacity</div>
+                        <div class="font-medium">91%</div>
+                    </div>
+                    <div class="bg-gray-50 p-3 rounded-lg">
+                        <div class="text-sm text-gray-500">Finish</div>
+                        <div class="font-medium">Smooth</div>
+                    </div>
+                    <div class="bg-gray-50 p-3 rounded-lg">
+                        <div class="text-sm text-gray-500">Archival Quality</div>
+                        <div class="font-medium">Acid-Free</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Product Certifications Section -->
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                <div class="bg-gradient-to-r from-forest-600 to-forest-800 px-4 py-3 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white mr-2" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                    </svg>
+                    <h2 class="text-white font-medium">Product Certifications</h2>
+                </div>
+                <div class="p-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <!-- FSC Certification -->
+                        <div class="bg-white border border-green-200 rounded-lg p-4 flex flex-col items-center text-center shadow-sm">
+                            <div class="bg-green-100 rounded-full p-3 mb-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                            </div>
+                            <h3 class="text-md font-semibold text-green-800">FSC Certified</h3>
+                            <p class="text-xs text-green-600 mt-1">Forest Stewardship Council</p>
+                            <p class="text-sm text-gray-600 mt-2">Wood from responsibly managed forests</p>
+                        </div>
+                        
+                        <!-- ECF Process -->
+                        <div class="bg-white border border-blue-200 rounded-lg p-4 flex flex-col items-center text-center shadow-sm">
+                            <div class="bg-blue-100 rounded-full p-3 mb-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                                </svg>
+                            </div>
+                            <h3 class="text-md font-semibold text-blue-800">ECF Process</h3>
+                            <p class="text-xs text-blue-600 mt-1">Elemental Chlorine Free</p>
+                            <p class="text-sm text-gray-600 mt-2">Bleached without elemental chlorine</p>
+                        </div>
+                        
+                        <!-- Carbon Neutral -->
+                        <div class="bg-white border border-gray-200 rounded-lg p-4 flex flex-col items-center text-center shadow-sm">
+                            <div class="bg-gray-100 rounded-full p-3 mb-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
+                            <h3 class="text-md font-semibold text-gray-800">Carbon Neutral</h3>
+                            <p class="text-xs text-gray-600 mt-1">Carbon Offset Certified</p>
+                            <p class="text-sm text-gray-600 mt-2">Manufacturing emissions offset</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleSecondary() {
+            const secondaryInfo = document.getElementById('secondary-info');
+            const toggleText = document.getElementById('toggle-text');
+            const toggleIcon = toggleText.querySelector('svg');
+            
+            secondaryInfo.classList.toggle('hidden');
+            
+            if (!secondaryInfo.classList.contains('hidden')) {
+                toggleText.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd" />
+                    </svg>
+                    Hide Additional Information
+                `;
+                secondaryInfo.classList.add('fade-in');
+            } else {
+                toggleText.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    </svg>
+                    Show Additional Information
+                `;
+                secondaryInfo.classList.remove('fade-in');
+            }
+        }
+
+        // Function to create charts
+        document.addEventListener('DOMContentLoaded', function() {
+            Chart.register(ChartDataLabels);
+
+            // Fiber Composition Chart
+            const fiberCtx = document.getElementById('fiberCompositionChart').getContext('2d');
+            const fiberChart = new Chart(fiberCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Post-Consumer Recycled', 'Pre-Consumer Recycled', 'Virgin Fiber (FSC Certified)'],
+                    datasets: [{
+                        data: [30, 45, 25],
+                        backgroundColor: [
+                            'rgba(5, 150, 105, 0.8)',
+                            'rgba(59, 130, 246, 0.8)',
+                            'rgba(16, 185, 129, 0.6)'
+                        ],
+                        borderColor: [
+                            'rgba(5, 150, 105, 1)',
+                            'rgba(59, 130, 246, 1)',
+                            'rgba(16, 185, 129, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        },
+                        datalabels: {
+                            color: '#fff',
+                            font: {
+                                weight: 'bold'
+                            },
+                            formatter: (value) => {
+                                return value + '%';
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Environmental Impact Chart
+            const environmentalCtx = document.getElementById('environmentalImpactChart').getContext('2d');
+            const environmentalChart = new Chart(environmentalCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Carbon Footprint', 'Water Usage', 'Energy Usage', 'Waste Reduction'],
+                    datasets: [{
+                        label: 'This Product',
+                        data: [25, 30, 40, 75],
+                        backgroundColor: 'rgba(91, 130, 91, 0.7)',
+                        borderColor: 'rgba(91, 130, 91, 1)',
+                        borderWidth: 1
+                    }, {
+                        label: 'Industry Average',
+                        data: [100, 100, 100, 100],
+                        backgroundColor: 'rgba(209, 213, 219, 0.5)',
+                        borderColor: 'rgba(209, 213, 219, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Percentage of Industry Average'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        },
+                        datalabels: {
+                            display: function(context) {
+                                return context.datasetIndex === 0; // only show for "This Product"
+                            },
+                            color: '#fff',
+                            font: {
+                                weight: 'bold'
+                            },
+                            formatter: (value) => {
+                                return value + '%';
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
