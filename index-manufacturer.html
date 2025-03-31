@@ -17,29 +17,47 @@
         .container { 
             display: grid; 
             grid-template-rows: auto auto auto;
-            gap: 20px;
-            max-width: 1200px;
+            gap: 30px;
+            max-width: 1400px;
             margin: 0 auto;
+            padding: 0 15px;
         }
         .top-row, .middle-row, .bottom-row { 
             display: grid;
             grid-template-columns: 1fr;
-            gap: 20px;
+            gap: 30px;
         }
         .chart-container { 
             background: white; 
-            padding: 20px; 
+            padding: 25px; 
             border-radius: 12px; 
             box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            height: 350px; /* Fixed height */
+            min-height: 350px;
             display: flex;
             flex-direction: column;
+        }
+        /* Special styling for KPI containers */
+        .kpi-container {
+            min-height: auto !important;
+            height: auto;
+            padding: 20px 25px;
+        }
+        .chart-container h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: #1b5e20;
+            font-size: 1.2rem;
+        }
+        .chart-wrapper {
+            flex: 1;
+            position: relative;
+            display: flex;
+            align-items: center;
             justify-content: center;
         }
         .kpi { 
             border-left: 8px solid;
             padding-left: 20px;
-            height: 140px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -47,17 +65,18 @@
         h1 { 
             text-align: center; 
             color: #1b5e20;
-            margin: 20px 0;
-            font-size: 1.8rem;
+            margin: 20px 0 30px;
+            font-size: 2rem;
         }
         .logo { 
             display: block; 
             margin: 0 auto; 
-            width: 60px;
+            width: 70px;
+            margin-bottom: 10px;
         }
         canvas {
-            width: 100% !important;
-            height: 300px !important; /* Fixed height */
+            max-width: 100%;
+            max-height: 100%;
         }
         .kpi-title {
             font-size: 1.1rem;
@@ -77,25 +96,46 @@
             align-items: center;
             gap: 6px;
         }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
 
         @media (min-width: 768px) {
             .top-row, .middle-row, .bottom-row {
                 grid-template-columns: 1fr 1fr;
             }
+            .chart-container {
+                min-height: 380px;
+            }
+            .kpi-container {
+                min-height: auto !important;
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .chart-container {
+                min-height: 400px;
+            }
+            .kpi-container {
+                min-height: auto !important;
+            }
         }
     </style>
 </head>
 <body>
-    <img src="https://cdn-icons-png.flaticon.com/512/2906/2906274.png" class="logo" alt="Eco Paper">
-    <h1>Paper Manufacturing Sustainability Dashboard</h1>
+    <div class="header">
+        <img src="https://cdn-icons-png.flaticon.com/512/2906/2906274.png" class="logo" alt="Eco Paper">
+        <h1>Paper Manufacturing Sustainability Dashboard</h1>
+    </div>
     
     <div class="container">
         <!-- Top Row: Energy and Water KPIs -->
         <div class="top-row">
-            <div class="chart-container">
+            <div class="chart-container kpi-container">
                 <div id="energyKpi" class="kpi"></div>
             </div>
-            <div class="chart-container">
+            <div class="chart-container kpi-container">
                 <div id="waterKpi" class="kpi"></div>
             </div>
         </div>
@@ -104,11 +144,15 @@
         <div class="middle-row">
             <div class="chart-container">
                 <h3>Fiber Content</h3>
-                <canvas id="fiberChart"></canvas>
+                <div class="chart-wrapper">
+                    <canvas id="fiberChart"></canvas>
+                </div>
             </div>
             <div class="chart-container">
                 <h3>Regulatory Violations</h3>
-                <canvas id="violationChart"></canvas>
+                <div class="chart-wrapper">
+                    <canvas id="violationChart"></canvas>
+                </div>
             </div>
         </div>
 
@@ -116,11 +160,15 @@
         <div class="bottom-row">
             <div class="chart-container">
                 <h3>Production Trends</h3>
-                <canvas id="productionChart"></canvas>
+                <div class="chart-wrapper">
+                    <canvas id="productionChart"></canvas>
+                </div>
             </div>
             <div class="chart-container">
                 <h3>Supplier Performance</h3>
-                <canvas id="supplierChart"></canvas>
+                <div class="chart-wrapper">
+                    <canvas id="supplierChart"></canvas>
+                </div>
             </div>
         </div>
     </div>
@@ -162,6 +210,10 @@
             function initCharts() {
                 cleanupCharts();
 
+                // Set Chart.js defaults for better responsiveness
+                Chart.defaults.responsive = true;
+                Chart.defaults.maintainAspectRatio = false;
+
                 chartInstances.fiber = new Chart(
                     document.getElementById('fiberChart'),
                     {
@@ -173,7 +225,15 @@
                                 backgroundColor: ['#66bb6a', '#a5d6a7', '#e0e0e0']
                             }]
                         },
-                        options: { responsive: true, maintainAspectRatio: true }
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: 'bottom'
+                                }
+                            }
+                        }
                     }
                 );
 
@@ -190,10 +250,20 @@
                                 label: '2023',
                                 data: [130, 132, 138, 142, 148, 152, 150, 155, 160, 165, 162, 170],
                                 borderColor: '#4CAF50',
+                                backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                                fill: true,
                                 tension: 0.3
                             }]
                         },
-                        options: { responsive: true, maintainAspectRatio: true }
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            scales: {
+                                y: {
+                                    beginAtZero: false
+                                }
+                            }
+                        }
                     }
                 );
 
@@ -201,10 +271,24 @@
                     document.getElementById('violationChart'),
                     {
                         type: 'bar',
-                        data: { labels: Array.from({length: 10}, (_, i) => 2014 + i),
-                            datasets: [{ label: 'Violations', data: [8, 7, 6, 5, 4, 5, 3, 4, 2, 1], backgroundColor: '#c62828' }]
+                        data: { 
+                            labels: Array.from({length: 10}, (_, i) => 2014 + i),
+                            datasets: [{ 
+                                label: 'Violations', 
+                                data: [8, 7, 6, 5, 4, 5, 3, 4, 2, 1], 
+                                backgroundColor: 'rgba(198, 40, 40, 0.8)'
+                            }]
                         },
-                        options: { responsive: true, maintainAspectRatio: true }
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    suggestedMax: 10
+                                }
+                            }
+                        }
                     }
                 );
 
@@ -218,17 +302,37 @@
                                 label: 'Supplier A',
                                 data: [9, 8, 7, 6, 8, 9],
                                 backgroundColor: 'rgba(102, 187, 106, 0.2)',
-                                borderColor: '#66bb6a'
+                                borderColor: '#66bb6a',
+                                pointBackgroundColor: '#66bb6a'
                             }]
                         },
-                        options: { responsive: true, maintainAspectRatio: true }
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            scales: {
+                                r: {
+                                    min: 0,
+                                    max: 10,
+                                    ticks: {
+                                        stepSize: 2
+                                    }
+                                }
+                            }
+                        }
                     }
                 );
             }
 
+            // Initialize KPIs and charts
             createKpi(58, 55, 'energyKpi', 'Energy Efficiency', 'kWh/Tonne');
             createKpi(22, 25, 'waterKpi', 'Water Usage', 'm³/Tonne');
             initCharts();
+
+            // Handle window resize to redraw charts
+            window.addEventListener('resize', function() {
+                // Add a small delay to ensure the container has resized
+                setTimeout(initCharts, 100);
+            });
         });
     </script>
 </body>
