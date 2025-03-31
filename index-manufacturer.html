@@ -31,7 +31,10 @@
             padding: 20px; 
             border-radius: 12px; 
             box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            min-height: 300px;
+            height: 350px; /* Fixed height */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
         .kpi { 
             border-left: 8px solid;
@@ -54,8 +57,7 @@
         }
         canvas {
             width: 100% !important;
-            height: auto !important;
-            min-height: 300px;
+            height: 300px !important; /* Fixed height */
         }
         .kpi-title {
             font-size: 1.1rem;
@@ -125,29 +127,8 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Store all chart instances
-            const chartInstances = {
-                fiber: null,
-                production: null,
-                violation: null,
-                supplier: null
-            };
+            const chartInstances = {};
 
-            // Debounce function to limit resize events
-            let resizeTimer;
-            function debounceResize() {
-                clearTimeout(resizeTimer);
-                resizeTimer = setTimeout(() => {
-                    Object.values(chartInstances).forEach(chart => {
-                        if (chart) {
-                            chart.resize();
-                            chart.update();
-                        }
-                    });
-                }, 100);
-            }
-
-            // Cleanup function to destroy charts
             function cleanupCharts() {
                 Object.values(chartInstances).forEach(chart => {
                     if (chart) {
@@ -156,7 +137,6 @@
                 });
             }
 
-            // KPI Creation Function
             function createKpi(actual, target, elementId, title, unit) {
                 const deviation = ((actual - target) / target) * 100;
                 const color = deviation <= 0 ? '#4CAF50' : '#f44336';
@@ -179,12 +159,9 @@
                 document.getElementById(elementId).innerHTML = kpiHtml;
             }
 
-            // Initialize all charts
             function initCharts() {
-                // Cleanup existing charts first
                 cleanupCharts();
 
-                // Fiber Content Chart
                 chartInstances.fiber = new Chart(
                     document.getElementById('fiberChart'),
                     {
@@ -196,19 +173,13 @@
                                 backgroundColor: ['#66bb6a', '#a5d6a7', '#e0e0e0']
                             }]
                         },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            plugins: {
-                                legend: { position: 'bottom' }
-                            }
-                        }
+                        options: { responsive: true, maintainAspectRatio: true }
                     }
                 );
 
-                // Production Volume Comparison
                 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
                                'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
                 chartInstances.production = new Chart(
                     document.getElementById('productionChart'),
                     {
@@ -220,54 +191,23 @@
                                 data: [130, 132, 138, 142, 148, 152, 150, 155, 160, 165, 162, 170],
                                 borderColor: '#4CAF50',
                                 tension: 0.3
-                            }, {
-                                label: '2022',
-                                data: [120, 125, 130, 135, 140, 145, 142, 138, 135, 140, 145, 150],
-                                borderColor: '#1e88e5',
-                                tension: 0.3
                             }]
                         },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            scales: {
-                                y: {
-                                    title: {
-                                        display: true,
-                                        text: 'Tonnes'
-                                    }
-                                }
-                            }
-                        }
+                        options: { responsive: true, maintainAspectRatio: true }
                     }
                 );
 
-                // Regulatory Violations
                 chartInstances.violation = new Chart(
                     document.getElementById('violationChart'),
                     {
                         type: 'bar',
-                        data: {
-                            labels: Array.from({length: 10}, (_, i) => 2014 + i),
-                            datasets: [{
-                                label: 'Violations',
-                                data: [8, 7, 6, 5, 4, 5, 3, 4, 2, 1],
-                                backgroundColor: '#c62828'
-                            }]
+                        data: { labels: Array.from({length: 10}, (_, i) => 2014 + i),
+                            datasets: [{ label: 'Violations', data: [8, 7, 6, 5, 4, 5, 3, 4, 2, 1], backgroundColor: '#c62828' }]
                         },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            scales: {
-                                y: {
-                                    beginAtZero: true
-                                }
-                            }
-                        }
+                        options: { responsive: true, maintainAspectRatio: true }
                     }
                 );
 
-                // Supplier Performance Radar Chart
                 chartInstances.supplier = new Chart(
                     document.getElementById('supplierChart'),
                     {
@@ -278,49 +218,17 @@
                                 label: 'Supplier A',
                                 data: [9, 8, 7, 6, 8, 9],
                                 backgroundColor: 'rgba(102, 187, 106, 0.2)',
-                                borderColor: '#66bb6a',
-                                pointBackgroundColor: '#66bb6a'
-                            }, {
-                                label: 'Supplier B',
-                                data: [7, 9, 6, 8, 7, 8],
-                                backgroundColor: 'rgba(30, 136, 229, 0.2)',
-                                borderColor: '#1e88e5',
-                                pointBackgroundColor: '#1e88e5'
+                                borderColor: '#66bb6a'
                             }]
                         },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            scales: {
-                                r: {
-                                    beginAtZero: true,
-                                    max: 10,
-                                    ticks: {
-                                        stepSize: 2
-                                    }
-                                }
-                            }
-                        }
+                        options: { responsive: true, maintainAspectRatio: true }
                     }
                 );
             }
 
-            // Initialize dashboard
-            try {
-                createKpi(58, 55, 'energyKpi', 'Energy Efficiency', 'kWh/Tonne');
-                createKpi(22, 25, 'waterKpi', 'Water Usage', 'm³/Tonne');
-                initCharts();
-                
-                // Add optimized resize handler
-                window.addEventListener('resize', debounceResize);
-                
-                // Cleanup before page unload
-                window.addEventListener('beforeunload', cleanupCharts);
-                
-            } catch (error) {
-                console.error('Dashboard initialization error:', error);
-                alert('Error loading dashboard. Please check console for details.');
-            }
+            createKpi(58, 55, 'energyKpi', 'Energy Efficiency', 'kWh/Tonne');
+            createKpi(22, 25, 'waterKpi', 'Water Usage', 'm³/Tonne');
+            initCharts();
         });
     </script>
 </body>
